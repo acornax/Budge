@@ -2,6 +2,26 @@ Budge::Application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
+  #home
+  root :to =>  "home#index"
+
+  #account activites
+  match 'login' => 'sessions#new', :as => :login
+  match 'session_create' => 'sessions#create', :as => :create_session
+  match 'logout' => 'sessions#destroy', :as => :logout
+
+  #expenses
+  match 'summary' => 'expenses#summary', :as => :summary
+
+  resources :users do
+    resources :expenses do
+    end
+    resources :budgets do
+    end
+
+  end
+
+
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
