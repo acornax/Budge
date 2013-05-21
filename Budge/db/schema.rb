@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506222038) do
+ActiveRecord::Schema.define(:version => 20130520222817) do
 
   create_table "budget_components", :force => true do |t|
     t.integer  "budget_id"
@@ -28,10 +28,10 @@ ActiveRecord::Schema.define(:version => 20130506222038) do
   end
 
   create_table "expenses", :force => true do |t|
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "user_id"
-    t.string   "type"
+    t.string   "expense_type"
     t.float    "amount"
   end
 

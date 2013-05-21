@@ -3,7 +3,7 @@ Budge::Application.routes.draw do
   # first created -> highest priority.
 
   #home
-  root :to =>  "home#index"
+  root :to =>  "budge#start"
 
   #account activites
   match 'login' => 'sessions#new', :as => :login
@@ -13,13 +13,14 @@ Budge::Application.routes.draw do
   #expenses
   match 'summary' => 'expenses#summary', :as => :summary
 
-  resources :users do
-    resources :expenses do
-    end
-    resources :budgets do
-    end
+  resources :users
 
+  resources :expenses do
   end
+
+  resources :budgets do
+  end
+
 
 
   # Sample of regular route:

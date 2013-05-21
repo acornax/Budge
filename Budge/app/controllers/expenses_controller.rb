@@ -1,27 +1,24 @@
 class ExpensesController < ApplicationController
-	before_filter :login_required, :only => :summary
+	respond_to :json
 
-	def show
-
+	def index
+		respond_with Expense.all
 	end
 
-	def new
-
+	def show
+		respond_with Expense.find(params[:id])
 	end
 
 	def create
-
+		respond_with Expense.create(params[:expense])
 	end
 
 	def update
-
+		respond_with Expenses.update(params[:id], params[:expense])
 	end
 
 	def destroy
-
+		respond_with Expense.destroy(params[:id])
 	end
 
-	def summary
-
-	end
 end

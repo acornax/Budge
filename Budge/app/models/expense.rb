@@ -1,4 +1,4 @@
 class Expense < ActiveRecord::Base
-  # attr_accessible :title, :body
+  attr_accessible :amount, :expense_type
   belongs_to :user
 end

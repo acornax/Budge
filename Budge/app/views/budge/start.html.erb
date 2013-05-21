@@ -1,0 +1,23 @@
+<h1> Budge </h1>
+
+<div ng-controller="ExpensesCtrl">
+<form ng-submit="addExpense()">
+	<div class = "label-container">
+		<label> Amount </label>
+	</div>
+	<input type="text" class = "text-input" ng-model="newExpense.amount">
+	<div class = "label-container">
+		<label> Type </label>
+	</div>
+	<input type="text" class = "text-input" ng-model="newExpense.expense_type">
+	<input type ="submit" class = "btn green small" value="Add">
+</form>
+
+<table>
+	<tr ng-repeat = "expense in expenses">
+		
+		<td>{{expense.amount}}</td>
+		<td>{{expense.expense_type}}</td>
+		
+	</tr>
+</table>
