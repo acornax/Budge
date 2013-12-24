@@ -2,11 +2,13 @@ class ExpensesController < ApplicationController
 	respond_to :json
 
 	def index
-		respond_with Expense.all
+		@expenses = Expense.all
+		respond_with @expenses
 	end
 
 	def show
-		respond_with Expense.find(params[:id])
+		@expense = Expense.find(params(:id))
+		respond_with @expense
 	end
 
 	def create
