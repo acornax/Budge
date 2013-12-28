@@ -3,20 +3,21 @@
 
   app = angular.module("Budge", ["ngResource"]);
 
-  app.factory('Expenses', function() {
-       return [{amount: 1, date: new Date("5/13/2013")}, {amount: 10, date: new Date("11/13/2013")}, {amount: 2, date: new Date("12/03/2013")}]
-  });
+  app.factory('Expenses', ['$resource', function($resource) {
+     return $resource('/expenses/:id', {id: '@id'}, {
+      query: {method:'GET', isArray:true}
+     });
+  }]);
 
   app.controller("ExpensesCtrl" , function($scope, Expenses) {
 
-    $scope.expenses = Expenses;
+    loadExpenses($scope, Expenses);
 
     return $scope.addExpense = function() {
-      var expense;
 
       $scope.newExpense.expense_date = $('.date-picker').val();
 
-      expense = Expense.save({expense: $scope.newExpense});
+      Expenses.save({expense: $scope.newExpense});
       $scope.expenses.push($scope.newExpense);
       return $scope.newExpense = {};
     };
@@ -24,13 +25,14 @@
 
   app.controller("SummaryCtrl", function($scope, Expenses) {
 
-    $scope.expenses = Expenses;
+    loadExpenses($scope, Expenses);
 
     $scope.getTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
      for (i = 0; i < $scope.expenses.length; i++){
-        month = $scope.expenses[i].date.getMonth();
-        totals[month] += $scope.expenses[i].amount;
+        var expense = $scope.expenses[i].expense
+        month = expense.date.getMonth();
+        totals[month] += expense.amount;
      }
      return [totals];
     }
@@ -42,18 +44,20 @@
         link: function(scope, element, attrs) {
           var ticks = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-          $.jqplot($(element).attr("id"),  scope.getTotals(), {
-            series:[{renderer:$.jqplot.BarRenderer
+          scope.$watch('expenses', function(newVal, oldVal){
+            if (newVal){
+               $.jqplot($(element).attr("id"),  scope.getTotals(), {
+                series:[{renderer:$.jqplot.BarRenderer
 
-            }],
-
-            axes: {
-              xaxis:{
-                renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: ticks
-              }
-            } 
-
+                }],
+                axes: {
+                  xaxis:{
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks
+                  }
+                } 
+              });
+            }
           });
         }
     };
@@ -63,5 +67,14 @@
 
 
 $(document).ready(function(){
-  $('.date-picker').datepicker();
+  $('.date-picker').datepicker({dateFormat:'dd-mm-yy'});
 });
+
+function loadExpenses($scope, Expenses){
+  Expenses.query(function(response){
+    $scope.expenses = response;
+    for (i = 0; i < $scope.expenses.length; i++){
+      $scope.expenses[i].expense.date = new Date($scope.expenses[i].expense.date)
+    }
+  });
+}
