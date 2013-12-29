@@ -30,7 +30,7 @@
     $scope.getTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
      for (i = 0; i < $scope.expenses.length; i++){
-        var expense = $scope.expenses[i].expense
+        var expense = $scope.expenses[i];
         month = expense.date.getMonth();
         totals[month] += expense.amount;
      }
@@ -68,13 +68,26 @@
 
 $(document).ready(function(){
   $('.date-picker').datepicker({dateFormat:'dd-mm-yy'});
+
+  $('#upload').submit(function(e){
+    e.preventDefault();
+    var formData = new FormData(this);
+    $.ajax({
+      url: '/upload',
+      data : formData,
+      processData: false,  
+      contentType: false,
+      method : 'post'
+    });
+  });
 });
 
 function loadExpenses($scope, Expenses){
   Expenses.query(function(response){
     $scope.expenses = response;
     for (i = 0; i < $scope.expenses.length; i++){
-      $scope.expenses[i].expense.date = new Date($scope.expenses[i].expense.date)
+      $scope.expenses[i] = $scope.expenses[i].expense;
+      $scope.expenses[i].date = new Date($scope.expenses[i].date)
     }
   });
 }

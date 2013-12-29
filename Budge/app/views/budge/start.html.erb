@@ -17,12 +17,7 @@
 	<input type ="submit" class = "btn green small" value="Add">
 </form>
 
-<table>
-	<tr ng-repeat = "expense in expenses">
-		
-		<td>{{expense.amount}}</td>
-		<td>{{expense.type}}</td>
-		<td>{{expense.date}}</td>
-		
-	</tr>
-</table>
+<%= form_tag('/upload', multipart:true, id: 'upload') do %>
+<%= file_field_tag "file", accept: 'text/csv' %>
+<%= submit_tag "Upload Expenses" %>
+<% end %>
