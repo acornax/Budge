@@ -9,6 +9,21 @@
 	box-shadow: 0px 10px 11px rgba(50, 50, 50, 0.75);
 }
 
+#upload{
+	display:inline-block;
+	div{
+		display:inline-block;
+		height:20px;
+		padding: 2px 0px 2px 0px;
+	}
+	#file{
+		opacity:0;
+		width:1px;
+		height:1px;
+		position:absolute;
+	}
+}
+
 .ui-icon-circle-triangle-e{
 	float: right;
 	padding: 8px 10px 2px 16px ;

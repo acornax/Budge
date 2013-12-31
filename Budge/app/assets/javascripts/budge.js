@@ -69,6 +69,19 @@
 $(document).ready(function(){
   $('.date-picker').datepicker({dateFormat:'dd-mm-yy'});
 
+  $('#file_wrapper').on('click', function(){
+    $('#file').trigger("click");
+  });
+
+  $('#file').on('change', function(){
+    $('#file_name').html(this.files[0].name);
+    $('#file_name_container').removeClass('hidden');
+  });
+
+  $('#submit').on('click', function(){
+    $("#upload").submit();
+  });
+
   $('#upload').submit(function(e){
     e.preventDefault();
     var formData = new FormData(this);

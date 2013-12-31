@@ -4,7 +4,7 @@ class ExpensesController < ApplicationController
 	respond_to :json
 
 	def index
-		@expenses = Expense.all
+		@expenses = Expense.where(:user_id => current_user.id)
 		respond_with @expenses
 	end
 
@@ -31,6 +31,7 @@ class ExpensesController < ApplicationController
 			expense = Expense.new
 			expense.amount = row_hash[" Billing Amount"].tr('$','').to_f
 			expense.expense_date = Date.parse(row_hash["Transaction Date"])
+			expense.user_id = current_user.id
 			expense.save!
 		end
 		render :nothing => true
