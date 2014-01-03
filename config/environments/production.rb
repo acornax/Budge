@@ -65,6 +65,7 @@ Budge::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  # so that angular doesn't mess up when javascript is compressed
+
+  # so that angular doesn't mess up when the js gets compressed
   config.assets.js_compressor = Sprockets::LazyCompressor.new { Uglifier.new(:mangle => false) }
 end
