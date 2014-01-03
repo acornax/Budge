@@ -1,2 +1,0 @@
-class BudgeController < ApplicationController
-end
