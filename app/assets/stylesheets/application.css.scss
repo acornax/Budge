@@ -1,0 +1,108 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ */
+
+/* layout */
+#header{
+	height:50px;
+	
+	.left{
+		float:left;
+	}
+	.right{
+		float:right;
+		text-align:right;
+		margin: 0px 0px 15px 0px;
+	}
+}
+
+/* general look and feel */
+ div{
+ 	font-family:"Trebuchet MS", Helvetica, sans-serif;
+ }
+
+ p{
+	margin-left:5px;
+ }
+
+ .hidden{
+ 	display:none !important;
+ }
+
+
+.btn{
+ 	border-radius: 50px;
+	font-weight:bold;
+	text-align:center;
+ }
+
+ .btn:hover{
+ 	cursor:pointer;
+ }
+
+ .btn.big{
+	height: 100px;
+	width: 280px;
+	font-size:25px;
+ }
+
+ .btn.med{
+ 	height: 40px;
+	width: 140px;
+	font-size:15px;
+ }
+
+ .btn.small{
+ 	height: 25px;
+	width: 70px;
+	font-size:12px;
+ }
+
+ .btn.green{
+	background-color:limegreen;
+	color:white;
+
+ }
+
+ .btn.green:hover{
+ 	background-color:green;
+ }
+
+ a, label{
+	font-weight:bold;
+	text-decoration:none;
+	color:limegreen;
+
+ }
+
+ .label-container{
+	margin-right: 15px;
+	text-align:right;
+	display:inline-block;
+}
+
+ a:hover{
+ 	color:green;
+ }
+
+
+input[type=text]{
+	border: none;
+	border-radius: 6px;
+	-moz-box-shadow: inset 0 1px 21px -9px #000;
+	-webkit-box-shadow: inset 0 1px 21px -9px #000;
+	box-shadow: inset 0 1px 21px -9px #000;
+	color: limegreen;
+	font-weight: bold;
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	padding: 0px 5px 0px 10px;
+ }
