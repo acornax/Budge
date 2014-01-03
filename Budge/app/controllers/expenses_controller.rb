@@ -1,24 +1,26 @@
 require 'csv'
 
 class ExpensesController < ApplicationController
-	respond_to :json
 
 	def index
-		@expenses = Expense.where(:user_id => current_user.id)
-		respond_with @expenses
+		@expenses = Expense.all
+		render 'index.json.rabl' #.where(:user_id => current_user.id)
 	end
 
 	def show
 		@expense = Expense.find(params(:id))
-		respond_with @expense
+		render 'show.json.rabl'
 	end
 
 	def create
-		respond_with Expense.create(params[:expense])
+		params[:expense][:user_id] = current_user.id
+		@expense = Expense.create(params[:expense])
+		render 'show.json.rabl'
 	end
 
 	def update
-		respond_with Expenses.update(params[:id], params[:expense])
+		@expense = Expenses.update(params[:id], params[:expense])
+		render 'show.json.rabl'
 	end
 
 	def upload
@@ -39,6 +41,7 @@ class ExpensesController < ApplicationController
 
 	def destroy
 		respond_with Expense.destroy(params[:id])
+		render :nothing => true
 	end
 
 end

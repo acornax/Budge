@@ -12,6 +12,7 @@ Budge::Application.routes.draw do
 
   #expenses
   match 'summary' => 'expenses#summary', :as => :summary
+  match 'upload' => 'expenses#upload', :as => :upload
 
   resources :users
 
