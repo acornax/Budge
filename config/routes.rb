@@ -5,6 +5,8 @@ Budge::Application.routes.draw do
   #home
   root :to =>  "budge#start"
 
+  match 'enter_expenses' => 'budge#enter_expenses', :as => :enter_expenses
+
   #account activites
   match 'login' => 'sessions#new', :as => :login
   match 'session_create' => 'sessions#create', :as => :create_session

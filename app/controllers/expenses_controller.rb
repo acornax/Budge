@@ -3,8 +3,8 @@ require 'csv'
 class ExpensesController < ApplicationController
 
 	def index
-		@expenses = Expense.all
-		render 'index.json.rabl' #.where(:user_id => current_user.id)
+		@expenses = Expense.where(:user_id => current_user.id)
+		render 'index.json.rabl'
 	end
 
 	def show

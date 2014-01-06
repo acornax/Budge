@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
 		
 		if user && user.password_hash == Digest::SHA2.hexdigest(user.password_salt + params[:password])
 			cookies[:auth_token] = user.auth_token
-			redirect_to root_path
+			redirect_to enter_expenses_path
 		else
 			redirect_to login_path, :notice => "Login Failed"
 		end

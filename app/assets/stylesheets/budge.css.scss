@@ -2,6 +2,14 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+#big_button_wrapper{
+	width:30%;
+	height:50%;
+	margin:auto;
+	text-align:center;
+}
+
+
 
 #ui-datepicker-div{
 	-webkit-box-shadow: 0px 10px 11px rgba(50, 50, 50, 0.75);
@@ -60,3 +68,4 @@ thead tr{
 	margin-right:0px;
 	margin-left:5px;
 }
+
