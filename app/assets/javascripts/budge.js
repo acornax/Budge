@@ -13,14 +13,32 @@
 
     loadExpenses($scope, Expenses);
 
-    return $scope.addExpense = function() {
+    $scope.addExpense = function() {
 
       $scope.newExpense.expense_date = $('.date-picker').val();
 
-      Expenses.save({expense: $scope.newExpense});
-      $scope.expenses.push($scope.newExpense);
+      Expenses.save({expense: $scope.newExpense}, function(u,getResponseHeaders){
+        $scope.expenses.push($scope.newExpense);
+        $('.date-picker').val('');
+        pulseElement($('#summary_link'));
+      });
+
       return $scope.newExpense = {};
     };
+
+    $scope.upload = function(){
+      var form = $('#upload')[0];
+      var formData = new FormData(form);
+      $.ajax({
+        url: '/upload',
+        data : formData,
+        processData: false,  
+        contentType: false,
+        method : 'post'
+      });
+    };
+
+
   });
 
   app.controller("SummaryCtrl", function($scope, Expenses) {
@@ -78,21 +96,6 @@ $(document).ready(function(){
     $('#file_name_container').removeClass('hidden');
   });
 
-  $('#submit').on('click', function(){
-    $("#upload").submit();
-  });
-
-  $('#upload').submit(function(e){
-    e.preventDefault();
-    var formData = new FormData(this);
-    $.ajax({
-      url: '/upload',
-      data : formData,
-      processData: false,  
-      contentType: false,
-      method : 'post'
-    });
-  });
 });
 
 function loadExpenses($scope, Expenses){
@@ -103,4 +106,11 @@ function loadExpenses($scope, Expenses){
       $scope.expenses[i].date = new Date($scope.expenses[i].date)
     }
   });
+}
+
+function pulseElement($el){
+  $el.addClass('success');
+  setTimeout(function(){
+    $el.removeClass('success');
+  }, 8000);
 }

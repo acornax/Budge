@@ -43,6 +43,7 @@
  	border-radius: 50px;
 	font-weight:bold;
 	text-align:center;
+	display:inline-block;
  }
 
  .btn:hover{
@@ -68,20 +69,25 @@
  }
 
  .btn.small{
- 	height: 25px;
-	width: 70px;
+ 	padding: 5px;
+	width: 60px;
 	font-size:12px;
  }
 
  .btn.green{
 	background-color:limegreen;
 	color:white;
+ }
 
+ .success{
+ 	animation:pulse 2s infinite;
+ 	-webkit-animation:pulse 2s infinite;
  }
 
  .btn.green:hover{
  	background-color:green;
  }
+
 
  a, label{
 	font-weight:bold;
@@ -94,7 +100,7 @@
 	margin-right: 15px;
 	text-align:right;
 	display:inline-block;
-}
+ }
 
  a:hover{
  	color:green;
@@ -112,4 +118,16 @@ input[type=email]{
 input[type=password]{
 	font-weight: bold;
 	font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+@keyframes.pulse{
+ 0% {color:limegreen; scale:(1);}
+ 50% {color:green;; scale:(0.75);}
+ 100% {color:limegreen; scale:(1);}
+}
+
+@-webkit-keyframes pulse {
+ 0% {color:limegreen;; scale:(1);}
+ 50% {color:green; scale:(0.75);}
+ 100% {color:limegreen; scale:(1);}
 }
