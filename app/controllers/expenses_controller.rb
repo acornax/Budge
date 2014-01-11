@@ -30,11 +30,9 @@ class ExpensesController < ApplicationController
 
 		csv.each do |row|
 			row_hash = row.to_hash
-			expense = Expense.new
-			expense.amount = row_hash[" Billing Amount"].tr('$','').to_f
-			expense.expense_date = Date.parse(row_hash["Transaction Date"])
-			expense.user_id = current_user.id
-			expense.save!
+			@expense = Expense.new
+			build_expense(row_hash)
+			@expense.save!
 		end
 		render :nothing => true
 	end
@@ -43,5 +41,36 @@ class ExpensesController < ApplicationController
 		respond_with Expense.destroy(params[:id])
 		render :nothing => true
 	end
+
+private
+
+
+def build_expense hash 
+	hash.each do |key, val|
+		begin
+			val = val.tr('$','')
+			val = eval(val)
+	    rescue Exception => e
+	    	next
+		end
+		if val.is_a?(Float) && val > 0
+			@expense.amount = val
+			break
+		end
+	end
+
+	hash.each do |key, val|
+		begin
+			val = Date.parse(val) 
+	    rescue ArgumentError
+	    	next
+	    end
+		if val.is_a? Date
+			@expense.expense_date = val
+			break
+		end
+	end
+	@expense.user_id = current_user.id
+end
 
 end

@@ -11,7 +11,8 @@ class UsersController < ApplicationController
 	def create
 		@user = User.new(params[:user])
 		@user.save!
-		redirect_to expenses_path
+	    cookies[:auth_token] = @user.auth_token
+		redirect_to enter_expenses_path
 	end
 
 	def edit
