@@ -9,7 +9,27 @@
 	text-align:center;
 }
 
+#file_name_container{
+	margin-top:20px;
+}
 
+#progress{
+	text-align: center;
+	width: 80px;
+	display: inline-block;
+	margin-top: -85px;
+	position: relative;
+	top: 52px;
+}
+#progress_spinner{
+	height:80px;
+	width:80px;
+	z-index:-1;
+}
+#progress_text{
+	position:relative;
+	top:-53px;
+}
 
 #ui-datepicker-div{
 	-webkit-box-shadow: 0px 10px 11px rgba(50, 50, 50, 0.75);

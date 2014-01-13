@@ -3,7 +3,12 @@ require 'csv'
 class ExpensesController < ApplicationController
 
 	def index
-		@expenses = Expense.where(:user_id => current_user.id)
+		if current_user
+			@expenses = Expense.where(:user_id => current_user.id)
+		else
+			build_guest_expenses
+		end
+
 		render 'index.json.rabl'
 	end
 
@@ -23,6 +28,11 @@ class ExpensesController < ApplicationController
 		render 'show.json.rabl'
 	end
 
+	def destroy
+		respond_with Expense.destroy(params[:id])
+		render :nothing => true
+	end
+
 	def upload
 		csv_text = params[:file].read
 		csv_text = csv_text.tr("'","")
@@ -34,11 +44,6 @@ class ExpensesController < ApplicationController
 			build_expense(row_hash)
 			@expense.save!
 		end
-		render :nothing => true
-	end
-
-	def destroy
-		respond_with Expense.destroy(params[:id])
 		render :nothing => true
 	end
 
@@ -71,6 +76,16 @@ def build_expense hash
 		end
 	end
 	@expense.user_id = current_user.id
+end
+
+def build_guest_expenses
+	@expenses = []
+	365.times do |n|
+		expense = Expense.new
+		expense.expense_date = Date.parse('01/01/2013') + rand(365)
+		expense.amount = rand(30)
+		@expenses << expense
+	end
 end
 
 end

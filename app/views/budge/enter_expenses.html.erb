@@ -24,9 +24,14 @@
 		<%= file_field_tag "file", accept: 'text/csv' %>
 	<% end %>
 	  and   
-	<a href = '#' ng-click="upload()">Upload</a>
+	<a id = "upload_link" href = '#' ng-click="upload()">Upload</a>
 
-	<p>
+    <div id = "progress" class = "hidden">
+    	<%= image_tag 'spinner.gif', :id => 'progress_spinner'%>
+    	<span id = "progress_text"> 100% </span>
+	</div>
+
+	<br/>
 
 	<div id = "file_name_container" class = "label-container hidden">
 		<label> Filename: </label>

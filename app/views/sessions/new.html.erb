@@ -1,5 +1,5 @@
 
-<h3> Log in </h3>
+<h3> Log in <span class = "error"> <%= flash[:login_error] %> </span> </h3>
 <%= form_tag create_session_path, :id => "login_form" do %>
 	<div class = "label-container">
 		<%= label_tag "Email:" %>
@@ -9,12 +9,13 @@
 		<%= label_tag "Password:"%>
 	</div>
 	<%= password_field_tag "password", "" %>
+	<br />
 	<div id = "log_in" class = "btn green med form-submit"> Log in </div>
 
 <% end %>
 
-
-<h4> Don't have an account? Sign up: </h4>
+<br/>
+<h3> Don't have an account? Sign up <span class = "error"> <%= flash[:user_error] %> </span> </h3>
 <%= form_for(@user) do |f| %>
 	<div id="error-container">
 	    <ul>
@@ -34,7 +35,8 @@
 	<div class = "label-container">
 		<%= f.label :password_confirmation, "Confirmation:"%>
 	</div>
-    <%= f.password_field :password_confirmation %> <br />
+    <%= f.password_field :password_confirmation %> 
+    <br />
     <div id = "create_account" class = "btn green med form-submit"> Create Account</div>
 <% end %>
 

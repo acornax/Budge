@@ -30,12 +30,32 @@
       var form = $('#upload')[0];
       var formData = new FormData(form);
       $.ajax({
+        xhr: function(){
+          var xhr = new window.XMLHttpRequest();
+          xhr.upload.addEventListener('progress', function(e){
+            if (e.lengthComputable){
+              var percentComplete = e.loaded/e.total;
+              $('#progress').removeClass('hidden');
+              $('#progress_text').html(percentComplete + "%");
+            }
+          }, false);
+          return xhr;
+        },
         url: '/upload',
         data : formData,
         processData: false,  
         contentType: false,
-        method : 'post'
+        method : 'post',
+        complete: function(){
+          $('#progress_text').html("100%");
+          pulseElement($('#summary_link'));
+          setTimeout(function(){
+            $('#progress').addClass('hidden');
+            $('#upload_link').removeClass('hidden');
+          }, 2000);
+        }
       });
+      $('#upload_link').addClass('hidden');
     };
 
 
@@ -72,8 +92,18 @@
                   xaxis:{
                     renderer: $.jqplot.CategoryAxisRenderer,
                     ticks: ticks
+                  },
+                  yaxis:{
+                    tickOptions:{
+                      formatString:'$%d'
+                      }
                   }
-                } 
+                },
+                highlighter: {
+                        show: true,
+                        sizeAdjust: 7.5,
+                        tooltipAxes:'y'
+                },
               });
             }
           });
@@ -112,5 +142,5 @@ function pulseElement($el){
   $el.addClass('success');
   setTimeout(function(){
     $el.removeClass('success');
-  }, 8000);
+  }, 16000);
 }

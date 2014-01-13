@@ -8,4 +8,10 @@ $(document).ready(function(){
 		$('#new_user').submit();
 	});
 
+	$('input').keydown(function(e){
+		if (e.keyCode == 13){
+			$(this).closest('form').submit();
+		}
+	});
+
 });

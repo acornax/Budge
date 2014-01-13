@@ -12,7 +12,8 @@ class SessionsController < ApplicationController
 			cookies[:auth_token] = user.auth_token
 			redirect_to enter_expenses_path
 		else
-			redirect_to login_path, :notice => "Login Failed"
+			flash[:login_error] = "- Error. Please Try again."
+			redirect_to login_path
 		end
 
 	end
