@@ -26,6 +26,11 @@
       return $scope.newExpense = {};
     };
 
+    $scope.destroyExpense = function(expense, index){
+     Expenses.delete({id: expense.id});
+     $scope.expenses.splice(index, 1);
+    };
+
     $scope.upload = function(){
       var form = $('#upload')[0];
       var formData = new FormData(form);

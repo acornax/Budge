@@ -38,6 +38,20 @@
 		<span id = "file_name"></span>
 	</div>
 
-	<p> Click <%= link_to "Here", summary_path, :id => "summary_link"%> for a summary of your expenses</p>
+	<br/>
+
+	<div> Click <%= link_to "Here", summary_path, :id => "summary_link"%> for a summary of your expenses</div>
+
+
+	<br> Below you can manually delete expenses </br>
+
+	<table>
+	<tr ng-repeat ="expense in expenses">
+		<td> {{expense.amount}}</td>
+		<td> {{expense.date}} </td>
+		<td> <div class = "btn small green" ng-click="destroyExpense(expense, index)"> </div></td>
+	</tr>
+
+	</table>
 
 </div>

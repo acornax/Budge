@@ -29,7 +29,7 @@ class ExpensesController < ApplicationController
 	end
 
 	def destroy
-		respond_with Expense.destroy(params[:id])
+		Expense.destroy(params[:id])
 		render :nothing => true
 	end
 
