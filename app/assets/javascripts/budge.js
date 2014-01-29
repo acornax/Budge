@@ -26,7 +26,8 @@
       return $scope.newExpense = {};
     };
 
-    $scope.destroyExpense = function(expense, index){
+    $scope.destroyExpense = function(expense){
+     var index  = $scope.expenses.indexOf(expense);
      Expenses.delete({id: expense.id});
      $scope.expenses.splice(index, 1);
     };
