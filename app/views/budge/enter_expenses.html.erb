@@ -3,6 +3,17 @@
 <p> Enter your expenses below </p>
 
 <div ng-controller="ExpensesCtrl">
+
+    <% if current_user.nil? %>
+
+		<div plot id="expense_chart"></div>
+
+		<p> This is an example of what your expenses report could look like </p>
+
+		<p> Click <%= link_to "Here", login_path %> to create an account and upload your own data. </p>
+
+	<% else %>
+
 	<form id = "add_form" ng-submit="addExpense()">
 		<div class = "label-container">
 			<label> Amount: </label>
@@ -40,17 +51,21 @@
 
 	<br/>
 
-	<div> Click <%= link_to "Here", summary_path, :id => "summary_link"%> for a summary of your expenses</div>
-
-
-	<br> Below you can manually delete expenses </br>
+	<div plot id="expense_chart"></div>
 
     <div class = "expense-container">
+    	<div class = "expense header">
+			<div class = "amount">Amount</div>
+			<div class = "date"> Date </div>
+			<div class = "delete"></div>
+		</div>
 		<div class = "expense" ng-repeat ="expense in expenses">
 			<div class = "amount">{{expense.amount}}</div>
 			<div class = "date"> {{expense.date | date:'shortDate'}} </div>
 			<div class = "delete btn small green" ng-click="destroyExpense(expense)">Delete</div>
 		</div>
 	</div>
+
+	<% end %>			
 
 </div>

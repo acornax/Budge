@@ -45,6 +45,7 @@ class ExpensesController < ApplicationController
 			build_expense(row_hash)
 			@expense.save!
 			@expenses << @expense;
+
 		end
 		render 'index.json.rabl'
 	end
@@ -68,7 +69,8 @@ def build_expense hash
 
 	hash.each do |key, val|
 		begin
-			val = Date.parse(val) 
+			debugger
+			val = Date.parse(val)
 	    rescue ArgumentError
 	    	next
 	    end

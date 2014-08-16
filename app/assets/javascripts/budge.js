@@ -20,7 +20,6 @@
       Expenses.save({expense: $scope.newExpense}, function(u,getResponseHeaders){
         $scope.expenses.push($scope.newExpense);
         $('.date-picker').val('');
-        pulseElement($('#summary_link'));
       });
 
       return $scope.newExpense = {};
@@ -56,7 +55,6 @@
           loadExpenses($scope, JSON.parse(xhr.responseText));
           $scope.$apply();
           $('#progress_text').html("100%");
-          pulseElement($('#summary_link'));
           setTimeout(function(){
             $('#progress').addClass('hidden');
             $('#upload_link').removeClass('hidden');
@@ -66,13 +64,6 @@
       $('#upload_link').addClass('hidden');
     };
 
-
-  });
-
-  app.controller("SummaryCtrl", function($scope, Expenses) {
-
-    queryExpenses($scope, Expenses);
-
     $scope.getTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
      for (i = 0; i < $scope.expenses.length; i++){
@@ -81,7 +72,7 @@
         totals[month] += expense.amount;
      }
      return [totals];
-    }
+    };
   });
 
   app.directive('plot', function() {
@@ -148,11 +139,4 @@ function loadExpenses($scope, expenses){
       expenses[i].date = new Date(expenses[i].date)
     }
     $scope.expenses = expenses;
-}
-
-function pulseElement($el){
-  $el.addClass('success');
-  setTimeout(function(){
-    $el.removeClass('success');
-  }, 16000);
 }

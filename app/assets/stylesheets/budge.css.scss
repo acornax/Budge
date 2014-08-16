@@ -93,7 +93,8 @@ thead tr{
 }
 
 .expense-container{
-	width:205px;
+	width:215px;
+	display:inline-block;	
 }
 
 .expense{
@@ -102,7 +103,7 @@ thead tr{
 	margin-left:10px;
 	
 	.amount{
-		width:25%;
+		width:30%;
 		display:inline-block;
 		padding-top: 4px;
 	}
@@ -115,6 +116,30 @@ thead tr{
 
 	.delete.btn{
 		float:right;
+	}
+}
+
+.expense.header{
+	font-weight:bold;
+
+	.amount{
+		text-align:center;
+	}
+	.date{
+		text-align:center;
+	}
+
+	.delete{
+		width:50%
+	}
+}
+
+#expense_chart{
+	display:inline-block;
+	width:95%;
+
+	.jqplot-yaxis{
+		padding-right:10px;
 	}
 }
 
