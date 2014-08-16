@@ -11,7 +11,7 @@
 
   app.controller("ExpensesCtrl" , function($scope, Expenses) {
 
-    loadExpenses($scope, Expenses);
+    queryExpenses($scope, Expenses);
 
     $scope.addExpense = function() {
 
@@ -52,7 +52,9 @@
         processData: false,  
         contentType: false,
         method : 'post',
-        complete: function(){
+        complete: function(xhr){
+          loadExpenses($scope, JSON.parse(xhr.responseText));
+          $scope.$apply();
           $('#progress_text').html("100%");
           pulseElement($('#summary_link'));
           setTimeout(function(){
@@ -69,7 +71,7 @@
 
   app.controller("SummaryCtrl", function($scope, Expenses) {
 
-    loadExpenses($scope, Expenses);
+    queryExpenses($scope, Expenses);
 
     $scope.getTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
@@ -134,14 +136,18 @@ $(document).ready(function(){
 
 });
 
-function loadExpenses($scope, Expenses){
+function queryExpenses($scope, Expenses){
   Expenses.query(function(response){
-    $scope.expenses = response;
-    for (i = 0; i < $scope.expenses.length; i++){
-      $scope.expenses[i] = $scope.expenses[i].expense;
-      $scope.expenses[i].date = new Date($scope.expenses[i].date)
-    }
+    loadExpenses($scope, response);
   });
+}
+
+function loadExpenses($scope, expenses){
+    for (i = 0; i < expenses.length; i++){
+      expenses[i] = expenses[i].expense;
+      expenses[i].date = new Date(expenses[i].date)
+    }
+    $scope.expenses = expenses;
 }
 
 function pulseElement($el){

@@ -92,3 +92,29 @@ thead tr{
 	margin-left:5px;
 }
 
+.expense-container{
+	width:205px;
+}
+
+.expense{
+
+	height:30px;
+	margin-left:10px;
+	
+	.amount{
+		width:25%;
+		display:inline-block;
+		padding-top: 4px;
+	}
+
+	.date{
+		width:25%;
+		display:inline-block;
+		padding-top: 4px;
+	}
+
+	.delete.btn{
+		float:right;
+	}
+}
+

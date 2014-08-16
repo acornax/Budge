@@ -45,13 +45,12 @@
 
 	<br> Below you can manually delete expenses </br>
 
-	<table>
-	<tr ng-repeat ="expense in expenses">
-		<td> {{expense.amount}}</td>
-		<td> {{expense.date}} </td>
-		<td> <div class = "btn small green" ng-click="destroyExpense(expense)"> </div></td>
-	</tr>
-
-	</table>
+    <div class = "expense-container">
+		<div class = "expense" ng-repeat ="expense in expenses">
+			<div class = "amount">{{expense.amount}}</div>
+			<div class = "date"> {{expense.date | date:'shortDate'}} </div>
+			<div class = "delete btn small green" ng-click="destroyExpense(expense)">Delete</div>
+		</div>
+	</div>
 
 </div>

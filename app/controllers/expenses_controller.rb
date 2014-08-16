@@ -34,6 +34,7 @@ class ExpensesController < ApplicationController
 	end
 
 	def upload
+		@expenses = []
 		csv_text = params[:file].read
 		csv_text = csv_text.tr("'","")
 		csv = CSV.parse(csv_text, :headers => true, :quote_char => "\'")
@@ -43,8 +44,9 @@ class ExpensesController < ApplicationController
 			@expense = Expense.new
 			build_expense(row_hash)
 			@expense.save!
+			@expenses << @expense;
 		end
-		render :nothing => true
+		render 'index.json.rabl'
 	end
 
 private
