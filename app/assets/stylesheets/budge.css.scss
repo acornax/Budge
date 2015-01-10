@@ -2,6 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+#budge-title{
+	margin-left:100px;
+}
+
 #big_button_wrapper{
 	width:30%;
 	height:50%;
@@ -74,6 +78,11 @@
 
 }
 
+.hasDatepicker{
+ 	position:relative;
+ 	z-index:1000;
+}
+
 thead tr{
 	border:1px black dotted;
 }
@@ -94,15 +103,21 @@ thead tr{
 	margin-left:5px;
 }
 
+.action-container{
+	margin-left:100px;	
+}
+
 .expense-container{
 	width:215px;
+	margin-top:25px;
+	margin-left:100px;
 	display:inline-block;	
 }
 
 .expense{
 
 	height:30px;
-	margin-left:10px;
+	margin-left:3px;
 	
 	.amount{
 		width:30%;
@@ -139,6 +154,7 @@ thead tr{
 #expense_chart{
 	display:inline-block;
 	width:95%;
+	margin-top:25px;
 
 	.jqplot-yaxis{
 		padding-right:10px;

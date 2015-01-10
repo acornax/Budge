@@ -17,8 +17,10 @@
 
       $scope.newExpense.expense_date = $('.date-picker').val();
 
-      Expenses.save({expense: $scope.newExpense}, function(u,getResponseHeaders){
-        $scope.expenses.push($scope.newExpense);
+      Expenses.save({expense: $scope.newExpense}, function(response,getResponseHeaders){
+        var expenseToAdd = response.expense;
+        expenseToAdd.date = new Date(expenseToAdd.date);
+        $scope.expenses.push(expenseToAdd);
         $('.date-picker').val('');
       });
 
@@ -75,35 +77,39 @@
     };
   });
 
+  var plot;
+
   app.directive('plot', function() {
     return {
         restrict: 'A',
         link: function(scope, element, attrs) {
           var ticks = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-          scope.$watch('expenses', function(newVal, oldVal){
+          var options = {
+                        series: [{renderer:$.jqplot.BarRenderer}],
+                        axes: {
+                          xaxis:{
+                            renderer: $.jqplot.CategoryAxisRenderer,
+                            ticks: ticks
+                          },
+                          yaxis:{
+                            tickOptions:{
+                              formatString:'$%d'
+                              }
+                          }
+                        },
+                        highlighter: {
+                                show: true,
+                                sizeAdjust: 7.5,
+                                tooltipAxes:'y'
+                        },
+                      };
+          scope.$watchCollection('expenses', function(newVal, oldVal){
+            if (newVal && plot){
+               plot.destroy();
+            } 
             if (newVal){
-               $.jqplot($(element).attr("id"),  scope.getTotals(), {
-                series:[{renderer:$.jqplot.BarRenderer
-
-                }],
-                axes: {
-                  xaxis:{
-                    renderer: $.jqplot.CategoryAxisRenderer,
-                    ticks: ticks
-                  },
-                  yaxis:{
-                    tickOptions:{
-                      formatString:'$%d'
-                      }
-                  }
-                },
-                highlighter: {
-                        show: true,
-                        sizeAdjust: 7.5,
-                        tooltipAxes:'y'
-                },
-              });
+               plot = $.jqplot($(element).attr("id"),  scope.getTotals(), options);
             }
           });
         }

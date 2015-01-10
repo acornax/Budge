@@ -1,6 +1,4 @@
- <h1> Budge </h1>
-
-<p> Enter your expenses below </p>
+ <h1 id="budge-title"> Budge </h1>
 
 <div ng-controller="ExpensesCtrl">
 
@@ -14,47 +12,49 @@
 
 	<% else %>
 
-	<form id = "add_form" ng-submit="addExpense()">
-		<div class = "label-container">
-			<label> Amount: </label>
+	<div class='action-container'>
+
+		<p> Enter your expenses below </p>
+
+		<form id = "add_form" ng-submit="addExpense()">
+			<div class = "label-container">
+				<label> Amount: </label>
+			</div>
+			<input type="text"  ng-model="newExpense.amount">
+			<div class = "label-container">
+				<label> Date: </label>
+			</div>
+			<input type="text" class = "date-picker" ng-model="newExpense.expense_date">
+			<div id = "add" ng-click="addExpense()" class = "btn green small"> Add </div>
+		</form>
+
+		<p> OR </p>
+
+		<%= form_tag('/upload', multipart:true, id: 'upload') do %>
+			<div id = "file_wrapper" class = "btn green med" >
+				Choose a File
+			</div>
+			<%= file_field_tag "file", accept: 'text/csv' %>
+		  and   
+		<a id = "upload_link" href = '#' ng-click="upload()">Upload</a>
+		<div>
+				Statement Type:
+			<%= select_tag(:statement_type, options_for_select([["Vancity Visa", "vancity_visa"], ["PC Mastercard", "pc_mastercard"]])) %>
 		</div>
-		<input type="text"  ng-model="newExpense.amount">
-		<div class = "label-container">
-			<label> Date: </label>
+		<% end %>
+	    <div id = "progress" class = "hidden">
+	    	<%= image_tag 'spinner.gif', :id => 'progress_spinner'%>
+	    	<span id = "progress_text"> 100% </span>
 		</div>
-		<input type="text" class = "date-picker" ng-model="newExpense.expense_date">
-		<div id = "add" ng-click="addExpense()" class = "btn green small"> Add </div>
-	</form>
 
-	<p> OR </p>
+		<br/>
 
-	<%= form_tag('/upload', multipart:true, id: 'upload') do %>
-		<div id = "file_wrapper" class = "btn green med" >
-			Choose a File
+		<div id = "file_name_container" class = "label-container hidden">
+			<label> Filename: </label>
+			<span id = "file_name"></span>
 		</div>
-		<%= file_field_tag "file", accept: 'text/csv' %>
-	  and   
-	<a id = "upload_link" href = '#' ng-click="upload()">Upload</a>
-	<div>
-			Statement Type:
-		<%= select_tag(:statement_type, options_for_select([["Vancity Visa", "vancity_visa"], ["PC Mastercard", "pc_mastercard"]])) %>
+
 	</div>
-	<% end %>
-    <div id = "progress" class = "hidden">
-    	<%= image_tag 'spinner.gif', :id => 'progress_spinner'%>
-    	<span id = "progress_text"> 100% </span>
-	</div>
-
-	<br/>
-
-	<div id = "file_name_container" class = "label-container hidden">
-		<label> Filename: </label>
-		<span id = "file_name"></span>
-	</div>
-
-	<br/>
-
-	<div plot id="expense_chart"></div>
 
     <div class = "expense-container">
     	<div class = "expense header">
@@ -68,6 +68,8 @@
 			<div class = "delete btn small green" ng-click="destroyExpense(expense)">Delete</div>
 		</div>
 	</div>
+
+	<div plot id="expense_chart"></div>
 
 	<% end %>			
 
