@@ -33,10 +33,13 @@
 			Choose a File
 		</div>
 		<%= file_field_tag "file", accept: 'text/csv' %>
-	<% end %>
 	  and   
 	<a id = "upload_link" href = '#' ng-click="upload()">Upload</a>
-
+	<div>
+			Statement Type:
+		<%= select_tag(:statement_type, options_for_select([["Vancity Visa", "vancity_visa"], ["PC Mastercard", "pc_mastercard"]])) %>
+	</div>
+	<% end %>
     <div id = "progress" class = "hidden">
     	<%= image_tag 'spinner.gif', :id => 'progress_spinner'%>
     	<span id = "progress_text"> 100% </span>

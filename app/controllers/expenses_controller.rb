@@ -42,7 +42,7 @@ class ExpensesController < ApplicationController
 		csv.each do |row|
 			row_hash = row.to_hash
 			@expense = Expense.new
-			build_expense(row_hash)
+			build_expense(row_hash, params[:statement_type])
 			@expense.save!
 			@expenses << @expense;
 
@@ -52,8 +52,7 @@ class ExpensesController < ApplicationController
 
 private
 
-
-def build_expense hash 
+def build_expense(hash, statement_type) 
 	hash.each do |key, val|
 		begin
 			val = val.tr('$','')
@@ -69,8 +68,8 @@ def build_expense hash
 
 	hash.each do |key, val|
 		begin
-			debugger
-			val = Date.parse(val)
+			date_format = @expense.get_date_format(statement_type)		
+			val = Date.strptime(val, date_format)
 	    rescue ArgumentError
 	    	next
 	    end
