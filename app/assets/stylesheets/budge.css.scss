@@ -2,9 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#budge-title{
-	margin-left:100px;
-}
 
 #big_button_wrapper{
 	width:30%;
@@ -12,6 +9,31 @@
 	margin:auto;
 	text-align:center;
 }
+
+#expense_chart{
+	display:inline-block;
+	width:95%;
+	margin-top:25px;
+
+	.jqplot-yaxis{
+		padding-right:10px;
+	}
+}
+
+#expense-container{
+	margin:70px 0px 70px 0px;
+	width:95%;
+}
+
+.delete.btn{
+	position:relative;
+	top:5px;
+}
+
+#action-container{
+	height:300px;
+}
+
 
 #file_name_container{
 	margin-top:20px;
@@ -102,62 +124,3 @@ thead tr{
 	margin-right:0px;
 	margin-left:5px;
 }
-
-.action-container{
-	margin-left:100px;	
-}
-
-.expense-container{
-	width:215px;
-	margin-top:25px;
-	margin-left:100px;
-	display:inline-block;	
-}
-
-.expense{
-
-	height:30px;
-	margin-left:3px;
-	
-	.amount{
-		width:30%;
-		display:inline-block;
-		padding-top: 4px;
-	}
-
-	.date{
-		width:25%;
-		display:inline-block;
-		padding-top: 4px;
-	}
-
-	.delete.btn{
-		float:right;
-	}
-}
-
-.expense.header{
-	font-weight:bold;
-
-	.amount{
-		text-align:center;
-	}
-	.date{
-		text-align:center;
-	}
-
-	.delete{
-		width:50%
-	}
-}
-
-#expense_chart{
-	display:inline-block;
-	width:95%;
-	margin-top:25px;
-
-	.jqplot-yaxis{
-		padding-right:10px;
-	}
-}
-

@@ -12,7 +12,25 @@
 
 	<% else %>
 
-	<div class='action-container'>
+	<div plot id="expense_chart"></div>
+
+	<% end %>	
+
+	<div id = "expense-container">
+	    <table id = "expense-table" expense-table>
+	    	<thead class = "expense header">
+		    	<tr>
+					<th class = "amount">Amount</th>
+					<th class = "date"> Date </th>
+					<th class = "delete"></th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+
+	<div id='action-container'>
 
 		<p> Enter your expenses below </p>
 
@@ -37,7 +55,7 @@
 			<%= file_field_tag "file", accept: 'text/csv' %>
 		  and   
 		<a id = "upload_link" href = '#' ng-click="upload()">Upload</a>
-		<div>
+		<div style="margin-top:5px">
 				Statement Type:
 			<%= select_tag(:statement_type, options_for_select([["Vancity Visa", "vancity_visa"], ["PC Mastercard", "pc_mastercard"]])) %>
 		</div>
@@ -56,21 +74,7 @@
 
 	</div>
 
-    <div class = "expense-container">
-    	<div class = "expense header">
-			<div class = "amount">Amount</div>
-			<div class = "date"> Date </div>
-			<div class = "delete"></div>
-		</div>
-		<div class = "expense" ng-repeat ="expense in expenses">
-			<div class = "amount">{{expense.amount}}</div>
-			<div class = "date"> {{expense.date | date:'shortDate'}} </div>
-			<div class = "delete btn small green" ng-click="destroyExpense(expense)">Delete</div>
-		</div>
-	</div>
-
-	<div plot id="expense_chart"></div>
-
-	<% end %>			
-
 </div>
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.js"></script>

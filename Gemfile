@@ -29,7 +29,7 @@ end
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'angularjs-rails'
-
+gem 'underscore-rails'
 
 
 # To use ActiveModel has_secure_password

@@ -27,7 +27,10 @@
       return $scope.newExpense = {};
     };
 
-    $scope.destroyExpense = function(expense){
+    $scope.destroyExpense = function(id){
+     var expense = _.find($scope.expenses, function(exp){
+      return exp.id == id;
+     });
      var index  = $scope.expenses.indexOf(expense);
      Expenses.delete({id: expense.id});
      $scope.expenses.splice(index, 1);
@@ -114,7 +117,35 @@
           });
         }
     };
-  }); 
+  });
+
+
+var expensesTable;
+app.directive('expenseTable', function($filter){
+  return function(scope, element, attrs){
+    scope.$watchCollection('expenses', function(newExpenses, oldExpenses){
+      if (newExpenses && expensesTable){
+        expensesTable.destroy();
+      }
+      if (newExpenses){
+        expensesTable = $('#expense-table').DataTable({
+          columns:[
+            {"data":"amount"},
+            {"data":"date", "render" : function(data, type, full, meta){
+                return $filter('date')(data, 'shortDate');
+              }
+            },
+            {"render" : function(data, type, full, meta){
+                return '<div class = "delete btn small green" onclick="angular.element(this).scope().destroyExpense('+full.id+')">Delete</div>';
+              }
+            }
+          ],
+          data:newExpenses
+        });   
+      }
+    });
+  };
+});
 
 }).call(this);
 
