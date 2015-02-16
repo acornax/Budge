@@ -1,4 +1,4 @@
-== Budge
+##Budge
 
 A simple application for keeping track of expenses.
 
