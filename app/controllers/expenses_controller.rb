@@ -86,7 +86,7 @@ def build_guest_expenses
 	365.times do |n|
 		expense = Expense.new
 		expense.expense_date = Date.parse('01/01/2013') + rand(365)
-		expense.amount = rand(30)
+		expense.amount = rand(30) + 1
 		@expenses << expense
 	end
 end
