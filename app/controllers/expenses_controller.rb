@@ -57,9 +57,9 @@ def build_expense(row, statement_type)
 		amountIndex = 2
 		infoIndex = 3
 	elsif statement_type == "vancity_bank"
-		dateIndex = 0
-		amountIndex = 3
-		infoIndex = 1
+		dateIndex = 1
+		amountIndex = 4
+		infoIndex = 2
 	elsif statement_type == "pc_mastercard"
 		dateIndex = 0
 		amountIndex = 2

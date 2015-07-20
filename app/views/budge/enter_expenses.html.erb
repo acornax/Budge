@@ -55,7 +55,7 @@
 			<a id = "upload_link" href = '#' ng-click="upload()">Upload</a>
 			<div style="margin-top:5px">
 					Statement Type:
-				<%= select_tag(:statement_type, options_for_select([["Vancity Visa", "vancity_visa", "Vancity Bank"], ["PC Mastercard", "pc_mastercard", "vancity_bank"]])) %>
+				<%= select_tag(:statement_type, options_for_select([["Vancity Visa", "vancity_visa"], ["PC Mastercard", "pc_mastercard"], ["Vancity Bank", "vancity_bank"]])) %>
 			</div>
 			<% end %>
 		    <div id = "progress" class = "hidden">

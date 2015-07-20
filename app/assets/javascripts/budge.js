@@ -124,13 +124,14 @@ var expensesTable;
 app.directive('expenseTable', function($filter){
   return function(scope, element, attrs){
     scope.$watchCollection('expenses', function(newExpenses, oldExpenses){
+      var searchVal = $("input[type='search'").val();
       if (newExpenses && expensesTable){
         expensesTable.destroy();
       }
       if (newExpenses){
         expensesTable = $('#expense-table').DataTable({
           "search": {
-            "search":"PH",
+            search: searchVal,
             regex: true,
             smart: false
           },
@@ -138,7 +139,7 @@ app.directive('expenseTable', function($filter){
             {"data":"amount"},
             {"data":"info"},
             {"data":"date", "render" : function(data, type, full, meta){
-                return $filter('date')(data, 'shortDate');
+                return $filter('date')(data, 'longDate');
               }
             },
             {"render" : function(data, type, full, meta){
