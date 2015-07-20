@@ -1,13 +1,13 @@
 class Expense < ActiveRecord::Base
-  attr_accessible :amount, :expense_type, :expense_date, :user_id
+  attr_accessible :amount, :expense_type, :expense_info, :expense_date, :user_id
   belongs_to :user
 
   def date_format_map
-  	{"vancity_visa" => 0, "pc_mastercard" => 1}
+  	{"vancity_visa" => 0, "pc_mastercard" => 1, "vancity_bank" => 2}
   end
 
   def date_formats 
-  	["%d/%m/%Y","%m/%d/%Y"]
+  	["%d/%m/%Y","%m/%d/%Y", nil]
   end
 
   def get_date_format statement_type

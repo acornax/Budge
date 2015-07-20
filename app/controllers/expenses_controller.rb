@@ -40,9 +40,8 @@ class ExpensesController < ApplicationController
 		csv = CSV.parse(csv_text, :headers => true, :quote_char => "\'")
 
 		csv.each do |row|
-			row_hash = row.to_hash
 			@expense = Expense.new
-			build_expense(row_hash, params[:statement_type])
+			build_expense(row, params[:statement_type])
 			@expense.save!
 			@expenses << @expense;
 
@@ -52,33 +51,42 @@ class ExpensesController < ApplicationController
 
 private
 
-def build_expense(hash, statement_type) 
-	hash.each do |key, val|
-		begin
-			val = val.tr('$','')
-			val = eval(val)
-	    rescue Exception => e
-	    	next
-		end
-		if val.is_a?(Float) && val > 0
-			@expense.amount = val
-			break
-		end
+def build_expense(row, statement_type)
+	if statement_type == "vancity_visa"
+		dateIndex = 0
+		amountIndex = 2
+		infoIndex = 3
+	elsif statement_type == "vancity_bank"
+		dateIndex = 0
+		amountIndex = 3
+		infoIndex = 1
+	elsif statement_type == "pc_mastercard"
+		dateIndex = 0
+		amountIndex = 2
+		infoIndex = 3
 	end
 
-	hash.each do |key, val|
-		begin
-			date_format = @expense.get_date_format(statement_type)		
-			val = Date.strptime(val, date_format)
-	    rescue ArgumentError
-	    	next
-	    end
-		if val.is_a? Date
-			@expense.expense_date = val
-			break
-		end
+	begin
+		raw_amount = row[amountIndex]
+		@expense.amount = eval(raw_amount.tr('$',''))
+	rescue Exception => e	    	
 	end
+
+	begin
+		raw_date = row[dateIndex]
+		date_format = @expense.get_date_format(statement_type)
+		if date_format.nil?
+			@expense.expense_date = Date.parse(raw_date)
+		else
+			@expense.expense_date = Date.strptime(raw_date, date_format)
+		end
+    rescue ArgumentError
+    end
+
+    @expense.expense_info = row[infoIndex]
+
 	@expense.user_id = current_user.id
+
 end
 
 def build_guest_expenses
@@ -87,6 +95,7 @@ def build_guest_expenses
 		expense = Expense.new
 		expense.expense_date = Date.parse('01/01/2013') + rand(365)
 		expense.amount = rand(30) + 1
+		expense.expense_info = "Example Expense"
 		@expenses << expense
 	end
 end

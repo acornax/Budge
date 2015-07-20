@@ -17,6 +17,7 @@
 	    	<thead class = "expense header">
 		    	<tr>
 					<th class = "amount">Amount</th>
+					<th class = "info">Info</th>
 					<th class = "date"> Date </th>
 					<th class = "delete"></th>
 				</tr>
@@ -54,7 +55,7 @@
 			<a id = "upload_link" href = '#' ng-click="upload()">Upload</a>
 			<div style="margin-top:5px">
 					Statement Type:
-				<%= select_tag(:statement_type, options_for_select([["Vancity Visa", "vancity_visa"], ["PC Mastercard", "pc_mastercard"]])) %>
+				<%= select_tag(:statement_type, options_for_select([["Vancity Visa", "vancity_visa", "Vancity Bank"], ["PC Mastercard", "pc_mastercard", "vancity_bank"]])) %>
 			</div>
 			<% end %>
 		    <div id = "progress" class = "hidden">

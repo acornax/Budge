@@ -71,8 +71,8 @@
 
     $scope.getTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
-     for (i = 0; i < $scope.expenses.length; i++){
-        var expense = $scope.expenses[i];
+     for (i = 0; i < $scope.filteredExpenses.length; i++){
+        var expense = $scope.filteredExpenses[i];
         month = expense.date.getMonth();
         totals[month] += expense.amount;
      }
@@ -107,7 +107,7 @@
                                 tooltipAxes:'y'
                         },
                       };
-          scope.$watchCollection('expenses', function(newVal, oldVal){
+          scope.$watchCollection('filteredExpenses', function(newVal, oldVal){
             if (newVal && plot){
                plot.destroy();
             } 
@@ -129,8 +129,14 @@ app.directive('expenseTable', function($filter){
       }
       if (newExpenses){
         expensesTable = $('#expense-table').DataTable({
+          "search": {
+            "search":"PH",
+            regex: true,
+            smart: false
+          },
           columns:[
             {"data":"amount"},
+            {"data":"info"},
             {"data":"date", "render" : function(data, type, full, meta){
                 return $filter('date')(data, 'shortDate');
               }
@@ -142,6 +148,11 @@ app.directive('expenseTable', function($filter){
           ],
           data:newExpenses
         });   
+
+        expensesTable.on('search.dt', function(){
+          scope.filteredExpenses = expensesTable.rows( { search:'applied' } ).data();
+          scope.$apply();
+        });
       }
     });
   };
@@ -176,4 +187,5 @@ function loadExpenses($scope, expenses){
       expenses[i].date = new Date(expenses[i].date)
     }
     $scope.expenses = expenses;
+    $scope.filteredExpenses = expenses;
 }
