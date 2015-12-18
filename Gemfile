@@ -28,7 +28,7 @@ end
 
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'angularjs-rails'
+gem 'angularjs-rails', '>=1.1'
 gem 'underscore-rails'
 
 
