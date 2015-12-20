@@ -9,7 +9,7 @@
      });
   }]);
 
-  app.controller("ExpensesCtrl" , function($scope, Expenses) {
+  app.controller("ExpensesCtrl" , function($scope, $timeout, Expenses) {
 
     queryExpenses($scope, Expenses);
 
@@ -57,8 +57,9 @@
         contentType: false,
         method : 'post',
         complete: function(xhr){
-          loadExpenses($scope, JSON.parse(xhr.responseText));
-          $scope.$apply();
+          $timeout(function() {
+            loadExpenses($scope, JSON.parse(xhr.responseText));
+          });
           $('#progress_text').html("100%");
           setTimeout(function(){
             $('#progress').addClass('hidden');
@@ -121,7 +122,7 @@
 
 
 var expensesTable;
-app.directive('expenseTable', function($filter){
+app.directive('expenseTable', function($timeout, $filter){
   return function(scope, element, attrs){
     scope.$watchCollection('expenses', function(newExpenses, oldExpenses){
       var searchVal = $("input[type='search'").val() || "";
@@ -150,8 +151,9 @@ app.directive('expenseTable', function($filter){
         });   
 
         expensesTable.on('search.dt', function(){
-          scope.filteredExpenses = expensesTable.rows( { search:'applied' } ).data();
-          scope.$apply();
+          $timeout(function() {
+            scope.filteredExpenses = expensesTable.rows( { search:'applied' } ).data();
+          });
         });
         expensesTable.search(searchVal).draw();
       }
