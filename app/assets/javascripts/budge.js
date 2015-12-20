@@ -126,14 +126,17 @@ app.directive('expenseTable', function($timeout, $filter){
   return function(scope, element, attrs){
     scope.$watchCollection('expenses', function(newExpenses, oldExpenses){
       var searchVal = $("input[type='search'").val() || "";
+      var order;
       if (newExpenses && expensesTable){
+        order = expensesTable.order();
         expensesTable.destroy();
       }
       if (newExpenses){
         expensesTable = $('#expense-table').DataTable({
           "search": {
             regex: true,
-            smart: false
+            smart: false,
+            stateSave: true
           },
           columns:[
             {"data":"amount"},
@@ -155,7 +158,12 @@ app.directive('expenseTable', function($timeout, $filter){
             scope.filteredExpenses = expensesTable.rows( { search:'applied' } ).data();
           });
         });
+        if (order){
+          expensesTable.order(order);
+        }
+
         expensesTable.search(searchVal).draw();
+
       }
     });
   };

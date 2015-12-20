@@ -29,11 +29,14 @@
 	td{
 		text-align:center;
 	}
+	tr:hover{
+		background-color:#EEEEEE;
+		cursor:pointer;
+	}
 }
 
 .delete.btn{
 	position:relative;
-	top:5px;
 }
 
 #action-container{

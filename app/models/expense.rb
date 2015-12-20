@@ -1,5 +1,5 @@
 class Expense < ActiveRecord::Base
-  attr_accessible :amount, :expense_type, :expense_info, :expense_date, :user_id
+  attr_accessible :amount, :expense_type, :info, :expense_date, :user_id
   belongs_to :user
 
   def date_format_map
