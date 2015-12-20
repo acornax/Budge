@@ -1,12 +1,9 @@
 object @expense
 
-attributes :id, :amount
+attributes :id, :amount, :info
 
 attributes :expense_type => :type
 
-node :info do |e|
-	e.expense_info
-end
 
 node :date do |e|
  if !e.expense_date.nil?

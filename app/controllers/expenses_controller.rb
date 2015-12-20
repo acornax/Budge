@@ -83,7 +83,7 @@ def build_expense(row, statement_type)
     rescue ArgumentError
     end
 
-    @expense.expense_info = row[infoIndex]
+    @expense.info = row[infoIndex]
 
 	@expense.user_id = current_user.id
 
@@ -95,7 +95,7 @@ def build_guest_expenses
 		expense = Expense.new
 		expense.expense_date = Date.parse('01/01/2013') + rand(365)
 		expense.amount = rand(30) + 1
-		expense.expense_info = "Example Expense"
+		expense.info = "Example Expense"
 		@expenses << expense
 	end
 end
