@@ -9,19 +9,29 @@
      });
   }]);
 
+
+  var zeroPad = function(varToPad){
+    return ("0" + varToPad).slice(-2);
+  };
+
   app.controller("ExpensesCtrl" , function($scope, $timeout, Expenses) {
+
+    var startDate = new Date(new Date().getFullYear(), 0, 1);
+    $scope.startDate = startDate.getFullYear() + "-" + zeroPad(startDate.getMonth() + 1)+ "-" + zeroPad(startDate.getDate());
+    var endDate = new Date();
+    $scope.endDate = endDate.getFullYear() + "-" + zeroPad(endDate.getMonth() + 1)+ "-" + zeroPad(endDate.getDate());
 
     queryExpenses($scope, Expenses);
 
     $scope.addExpense = function() {
 
-      $scope.newExpense.expense_date = $('.date-picker').val();
+      $scope.newExpense.expense_date = $('#new-expense-date-picker').val();
 
       Expenses.save({expense: $scope.newExpense}, function(response,getResponseHeaders){
         var expenseToAdd = response.expense;
         expenseToAdd.date = new Date(expenseToAdd.date);
         $scope.expenses.push(expenseToAdd);
-        $('.date-picker').val('');
+        $('#new-expense-date-picker').val('');
       });
 
       return $scope.newExpense = {};
@@ -70,6 +80,22 @@
       $('#upload_link').addClass('hidden');
     };
 
+    $scope.filterExpenses = function () {
+      var startTime = new Date($scope.startDate).getTime();
+      var endTime = new Date($scope.endDate).getTime();
+
+      var filteredExpenses = [];
+
+      for (i = 0; i < $scope.expenses.length; i++){
+        var expenseDate = new Date($scope.expenses[i].date);
+
+        if (expenseDate.getTime() > startTime && expenseDate.getTime() < endTime){
+          filteredExpenses.push($scope.expenses[i]);
+        }
+      }
+      $scope.filteredExpenses = filteredExpenses;
+    };
+
     $scope.getTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
      for (i = 0; i < $scope.filteredExpenses.length; i++){
@@ -113,6 +139,7 @@
                plot.destroy();
             } 
             if (newVal){
+               scope.filterExpenses(); //FIXME, shouldn't need this.
                plot = $.jqplot($(element).attr("id"),  scope.getTotals(), options);
             }
           });
@@ -120,11 +147,29 @@
     };
   });
 
+app.directive('datepicker', function(){
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function(scope, element, attrs){
+      $(element).datepicker({
+        dateFormat: "yy-mm-dd", 
+        onSelect: function(date){
+          scope[attrs.ngModel] = date;
+          scope.filterExpenses();
+          scope.$apply();
+        }
+      });
+    }
+  };
+
+});
+
 
 var expensesTable;
 app.directive('expenseTable', function($timeout, $filter){
   return function(scope, element, attrs){
-    scope.$watchCollection('expenses', function(newExpenses, oldExpenses){
+    scope.$watchCollection('filteredExpenses', function(newExpenses, oldExpenses){
       var searchVal = $("input[type='search'").val() || "";
       var order;
       if (newExpenses && expensesTable){
@@ -173,7 +218,7 @@ app.directive('expenseTable', function($timeout, $filter){
 
 
 $(document).ready(function(){
-  $('.date-picker').datepicker({dateFormat:'dd-mm-yy'});
+  $('#new-expense-date-picker').datepicker({dateFormat:'dd-mm-yy'});
 
   $('#file_wrapper').on('click', function(){
     $('#file').trigger("click");
@@ -194,8 +239,10 @@ function queryExpenses($scope, Expenses){
 
 function loadExpenses($scope, expenses){
     for (i = 0; i < expenses.length; i++){
+      var expenseDate = new Date(expenses[i].expense.date);
       expenses[i] = expenses[i].expense;
-      expenses[i].date = new Date(expenses[i].date)
+      expenses[i].date = expenseDate;
     }
     $scope.expenses = expenses;
+    $scope.filterExpenses();
 }

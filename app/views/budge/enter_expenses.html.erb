@@ -12,6 +12,15 @@
 
 	<div plot id="expense_chart"></div>
 
+	<p> 
+		Start Date
+		<input id="start-time-date-picker" type="text" class = "date-picker" ng-model="startDate" datepicker>
+	</p>
+	<p> 
+		End Date
+		<input id="end-time-date-picker" type="text" class = "date-picker" ng-model="endDate" datepicker>
+	</p>
+
 	<div id = "expense-container">
 	    <table id = "expense-table" expense-table>
 	    	<thead class = "expense header">
@@ -44,7 +53,7 @@
 				<div class = "label-container">
 					<label> Date: </label>
 				</div>
-				<input type="text" class = "date-picker" ng-model="newExpense.expense_date">
+				<input type="text" id='new-expense-date-picker' class = "date-picker" ng-model="newExpense.expense_date">
 				<div id = "add" ng-click="addExpense()" class = "btn green small"> Add </div>
 			</form>
 
