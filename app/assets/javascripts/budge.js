@@ -3,8 +3,8 @@
 
   app = angular.module("Budge", ["ngResource"]);
 
-  app.factory('Expenses', ['$resource', function($resource) {
-     return $resource('/expenses/:id', {id: '@id'}, {
+  app.factory('Transactions', ['$resource', function($resource) {
+     return $resource('/transactions/:id', {id: '@id'}, {
       query: {method:'GET', isArray:true}
      });
   }]);
@@ -14,36 +14,36 @@
     return ("0" + varToPad).slice(-2);
   };
 
-  app.controller("ExpensesCtrl" , function($scope, $timeout, Expenses) {
+  app.controller("TransactionsCtrl" , function($scope, $timeout, Transactions) {
 
     var startDate = new Date(new Date().getFullYear(), 0, 1);
     $scope.startDate = startDate.getFullYear() + "-" + zeroPad(startDate.getMonth() + 1)+ "-" + zeroPad(startDate.getDate());
     var endDate = new Date();
     $scope.endDate = endDate.getFullYear() + "-" + zeroPad(endDate.getMonth() + 1)+ "-" + zeroPad(endDate.getDate());
 
-    queryExpenses($scope, Expenses);
+    queryTransactions($scope, Transactions);
 
-    $scope.addExpense = function() {
+    $scope.addTransaction = function() {
 
-      $scope.newExpense.expense_date = $('#new-expense-date-picker').val();
+      $scope.newTransaction.transaction_date = $('#new-transaction-date-picker').val();
 
-      Expenses.save({expense: $scope.newExpense}, function(response,getResponseHeaders){
-        var expenseToAdd = response.expense;
-        expenseToAdd.date = new Date(expenseToAdd.date);
-        $scope.expenses.push(expenseToAdd);
-        $('#new-expense-date-picker').val('');
+      Transactions.save({transaction: $scope.newTransaction}, function(response,getResponseHeaders){
+        var transactionToAdd = response.transaction;
+        transactionToAdd.date = new Date(transactionToAdd.date);
+        $scope.transactions.push(transactionToAdd);
+        $('#new-transaction-date-picker').val('');
       });
 
-      return $scope.newExpense = {};
+      return $scope.newTransaction = {};
     };
 
-    $scope.destroyExpense = function(id){
-     var expense = _.find($scope.expenses, function(exp){
+    $scope.destroyTransaction = function(id){
+     var transaction = _.find($scope.transactions, function(exp){
       return exp.id == id;
      });
-     var index  = $scope.expenses.indexOf(expense);
-     Expenses.delete({id: expense.id});
-     $scope.expenses.splice(index, 1);
+     var index  = $scope.transactions.indexOf(transaction);
+     Transactions.delete({id: transaction.id});
+     $scope.transactions.splice(index, 1);
     };
 
     $scope.upload = function(){
@@ -68,7 +68,7 @@
         method : 'post',
         complete: function(xhr){
           $timeout(function() {
-            loadExpenses($scope, JSON.parse(xhr.responseText));
+            loadTransactions($scope, JSON.parse(xhr.responseText));
           });
           $('#progress_text').html("100%");
           setTimeout(function(){
@@ -80,28 +80,28 @@
       $('#upload_link').addClass('hidden');
     };
 
-    $scope.filterExpenses = function () {
+    $scope.filterTransactions = function () {
       var startTime = new Date($scope.startDate).getTime();
       var endTime = new Date($scope.endDate).getTime();
 
-      var filteredExpenses = [];
+      var filteredTransactions = [];
 
-      for (i = 0; i < $scope.expenses.length; i++){
-        var expenseDate = new Date($scope.expenses[i].date);
+      for (i = 0; i < $scope.transactions.length; i++){
+        var transactionDate = new Date($scope.transactions[i].date);
 
-        if (expenseDate.getTime() > startTime && expenseDate.getTime() < endTime){
-          filteredExpenses.push($scope.expenses[i]);
+        if (transactionDate.getTime() > startTime && transactionDate.getTime() < endTime){
+          filteredTransactions.push($scope.transactions[i]);
         }
       }
-      $scope.filteredExpenses = filteredExpenses;
+      $scope.filteredTransactions = filteredTransactions;
     };
 
     $scope.getTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
-     for (i = 0; i < $scope.filteredExpenses.length; i++){
-        var expense = $scope.filteredExpenses[i];
-        month = expense.date.getMonth();
-        totals[month] += expense.amount;
+     for (i = 0; i < $scope.filteredTransactions.length; i++){
+        var transaction = $scope.filteredTransactions[i];
+        month = transaction.date.getMonth();
+        totals[month] += transaction.amount;
      }
      return [totals];
     };
@@ -134,12 +134,12 @@
                                 tooltipAxes:'y'
                         },
                       };
-          scope.$watchCollection('filteredExpenses', function(newVal, oldVal){
+          scope.$watchCollection('filteredTransactions', function(newVal, oldVal){
             if (newVal && plot){
                plot.destroy();
             } 
             if (newVal){
-               scope.filterExpenses(); //FIXME, shouldn't need this.
+               scope.filterTransactions(); //FIXME, shouldn't need this.
                plot = $.jqplot($(element).attr("id"),  scope.getTotals(), options);
             }
           });
@@ -156,7 +156,7 @@ app.directive('datepicker', function(){
         dateFormat: "yy-mm-dd", 
         onSelect: function(date){
           scope[attrs.ngModel] = date;
-          scope.filterExpenses();
+          scope.filterTransactions();
           scope.$apply();
         }
       });
@@ -166,18 +166,18 @@ app.directive('datepicker', function(){
 });
 
 
-var expensesTable;
-app.directive('expenseTable', function($timeout, $filter){
+var transactionsTable;
+app.directive('transactionTable', function($timeout, $filter){
   return function(scope, element, attrs){
-    scope.$watchCollection('filteredExpenses', function(newExpenses, oldExpenses){
+    scope.$watchCollection('filteredTransactions', function(newTransactions, oldTransactions){
       var searchVal = $("input[type='search'").val() || "";
       var order;
-      if (newExpenses && expensesTable){
-        order = expensesTable.order();
-        expensesTable.destroy();
+      if (newTransactions && transactionsTable){
+        order = transactionsTable.order();
+        transactionsTable.destroy();
       }
-      if (newExpenses){
-        expensesTable = $('#expense-table').DataTable({
+      if (newTransactions){
+        transactionsTable = $('#transaction-table').DataTable({
           "search": {
             regex: true,
             smart: false,
@@ -191,23 +191,23 @@ app.directive('expenseTable', function($timeout, $filter){
               }
             },
             {"render" : function(data, type, full, meta){
-                return '<div class = "delete btn small green" onclick="angular.element(this).scope().destroyExpense('+full.id+')">Delete</div>';
+                return '<div class = "delete btn small green" onclick="angular.element(this).scope().destroyTransaction('+full.id+')">Delete</div>';
               }
             }
           ],
-          data:newExpenses
+          data:newTransactions
         });   
 
-        expensesTable.on('search.dt', function(){
+        transactionsTable.on('search.dt', function(){
           $timeout(function() {
-            scope.filteredExpenses = expensesTable.rows( { search:'applied' } ).data();
+            scope.filteredTransactions = transactionsTable.rows( { search:'applied' } ).data();
           });
         });
         if (order){
-          expensesTable.order(order);
+          transactionsTable.order(order);
         }
 
-        expensesTable.search(searchVal).draw();
+        transactionsTable.search(searchVal).draw();
 
       }
     });
@@ -218,7 +218,7 @@ app.directive('expenseTable', function($timeout, $filter){
 
 
 $(document).ready(function(){
-  $('#new-expense-date-picker').datepicker({dateFormat:'dd-mm-yy'});
+  $('#new-transaction-date-picker').datepicker({dateFormat:'dd-mm-yy'});
 
   $('#file_wrapper').on('click', function(){
     $('#file').trigger("click");
@@ -231,18 +231,18 @@ $(document).ready(function(){
 
 });
 
-function queryExpenses($scope, Expenses){
-  Expenses.query(function(response){
-    loadExpenses($scope, response);
+function queryTransactions($scope, Transactions){
+  Transactions.query(function(response){
+    loadTransactions($scope, response);
   });
 }
 
-function loadExpenses($scope, expenses){
-    for (i = 0; i < expenses.length; i++){
-      var expenseDate = new Date(expenses[i].expense.date);
-      expenses[i] = expenses[i].expense;
-      expenses[i].date = expenseDate;
+function loadTransactions($scope, transactions){
+    for (i = 0; i < transactions.length; i++){
+      var transactionDate = new Date(transactions[i].transaction.date);
+      transactions[i] = transactions[i].transaction;
+      transactions[i].date = transactionDate;
     }
-    $scope.expenses = expenses;
-    $scope.filterExpenses();
+    $scope.transactions = transactions;
+    $scope.filterTransactions();
 }
