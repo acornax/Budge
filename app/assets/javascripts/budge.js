@@ -44,6 +44,10 @@
      var index  = $scope.transactions.indexOf(transaction);
      Transactions.delete({id: transaction.id});
      $scope.transactions.splice(index, 1);
+     var filterIndex  = $scope.filteredTransactions.indexOf(transaction);
+     $scope.filteredTransactions.splice(filterIndex, 1);
+     $scope.$apply();
+
     };
 
     $scope.upload = function(){
@@ -96,14 +100,38 @@
       $scope.filteredTransactions = filteredTransactions;
     };
 
-    $scope.getTotals = function () {
+    $scope.getIncomeTotals = function () {
+     var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
+     for (i = 0; i < $scope.filteredTransactions.length; i++){
+        var transaction = $scope.filteredTransactions[i];
+        month = transaction.date.getMonth();
+        if (transaction.amount > 0){
+          totals[month] += transaction.amount;
+        }
+     }
+     return totals;
+    };
+
+    $scope.getExpenseTotals = function () {
+     var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
+     for (i = 0; i < $scope.filteredTransactions.length; i++){
+        var transaction = $scope.filteredTransactions[i];
+        month = transaction.date.getMonth();
+        if (transaction.amount < 0){
+          totals[month] -= transaction.amount;
+        } 
+     }
+     return totals;
+    };
+
+    $scope.getNetIncomeTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
      for (i = 0; i < $scope.filteredTransactions.length; i++){
         var transaction = $scope.filteredTransactions[i];
         month = transaction.date.getMonth();
         totals[month] += transaction.amount;
      }
-     return [totals];
+     return totals;
     };
   });
 
@@ -116,7 +144,7 @@
           var ticks = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
           var options = {
-                        series: [{renderer:$.jqplot.BarRenderer}],
+                        series: [{renderer:$.jqplot.BarRenderer}, {renderer:$.jqplot.BarRenderer}, {renderer:$.jqplot.BarRenderer}],
                         axes: {
                           xaxis:{
                             renderer: $.jqplot.CategoryAxisRenderer,
@@ -140,7 +168,7 @@
             } 
             if (newVal){
                scope.filterTransactions(); //FIXME, shouldn't need this.
-               plot = $.jqplot($(element).attr("id"),  scope.getTotals(), options);
+               plot = $.jqplot($(element).attr("id"),  [scope.getIncomeTotals(), scope.getExpenseTotals(), scope.getNetIncomeTotals()], options);
             }
           });
         }

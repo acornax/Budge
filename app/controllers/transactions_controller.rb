@@ -54,22 +54,33 @@ private
 def build_transaction(row, statement_type)
 	if statement_type == "vancity_visa"
 		dateIndex = 0
-		amountIndex = 2
+		expenseIndex = 2
+		incomeIndex = 2
 		infoIndex = 3
 	elsif statement_type == "vancity_bank"
 		dateIndex = 1
-		amountIndex = 4
+		expenseIndex = 4
+		incomeIndex = 5
 		infoIndex = 2
 	elsif statement_type == "pc_mastercard"
 		dateIndex = 0
-		amountIndex = 2
+		expenseIndex = 2
+		incomeIndex = 2
 		infoIndex = 3
 	end
 
+	# Attempt to set the amount based on the expense index
 	begin
-		raw_amount = row[amountIndex]
+		raw_amount = row[expenseIndex]
 		@transaction.amount = eval(raw_amount.tr('$',''))
+		@transaction.amount=@transaction.amount*-1
 	rescue Exception => e	    	
+		# Attempt to set the amount based on the income index if setting via the expense index fails
+		begin
+			raw_amount = row[incomeIndex]
+			@transaction.amount = eval(raw_amount.tr('$',''))
+		rescue Exception => e	    	
+		end
 	end
 
 	begin
