@@ -5,20 +5,20 @@ Budge::Application.routes.draw do
   #home
   root :to =>  "budge#start"
 
-  match 'enter_expenses' => 'budge#enter_expenses', :as => :enter_expenses
+  match 'enter_transactions' => 'budge#enter_transactions', :as => :enter_transactions
 
   #account activites
   match 'login' => 'sessions#new', :as => :login
   match 'session_create' => 'sessions#create', :as => :create_session
   match 'logout' => 'sessions#destroy', :as => :logout
 
-  #expenses
-  match 'summary' => 'expenses#summary', :as => :summary
-  match 'upload' => 'expenses#upload', :as => :upload
+  #transactions
+  match 'summary' => 'transactions#summary', :as => :summary
+  match 'upload' => 'transactions#upload', :as => :upload
 
   resources :users
 
-  resources :expenses do
+  resources :transactions do
   end
 
   resources :budgets do

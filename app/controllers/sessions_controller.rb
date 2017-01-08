@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
 		
 		if user && user.password_hash == Digest::SHA2.hexdigest(user.password_salt + params[:password])
 			cookies[:auth_token] = user.auth_token
-			redirect_to enter_expenses_path
+			redirect_to enter_transactions_path
 		else
 			flash[:login_error] = "- Error. Please Try again."
 			redirect_to login_path

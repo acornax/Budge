@@ -1,0 +1,93 @@
+ <h1 id="budge-title"> Budge </h1>
+
+<div ng-controller="TransactionsCtrl">
+
+    <% if current_user.nil? %>
+
+		<p> This is an example of what your transactions report could look like </p>
+
+		<p> Click <%= link_to "Here", login_path %> to create an account and upload your own data. </p>
+
+	<% end %>	
+
+	<div plot id="transaction_chart"></div>
+
+	<p> 
+		Start Date
+		<input id="start-time-date-picker" type="text" class = "date-picker" ng-model="startDate" datepicker>
+	</p>
+	<p> 
+		End Date
+		<input id="end-time-date-picker" type="text" class = "date-picker" ng-model="endDate" datepicker>
+	</p>
+
+	<div id = "transaction-container">
+	    <table id = "transaction-table" transaction-table>
+	    	<thead class = "transaction header">
+		    	<tr>
+					<th class = "amount">Amount</th>
+					<th class = "info">Info</th>
+					<th class = "date"> Date </th>
+					<th class = "delete"></th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+
+	 <% if !current_user.nil? %>
+		<div id='action-container'>
+
+			<p> Enter your transactions below </p>
+
+			<form id = "add_form" ng-submit="addTransaction()">
+				<div class = "label-container">
+					<label> Amount: </label>
+				</div>
+				<input type="text"  ng-model="newTransaction.amount">
+				<div class = "label-container">
+					<label> Info: </label>
+				</div>
+				<input type="text"  ng-model="newTransaction.info">
+				<div class = "label-container">
+					<label> Date: </label>
+				</div>
+				<input type="text" id='new-transaction-date-picker' class = "date-picker" ng-model="newTransaction.transaction_date">
+				<div id = "add" ng-click="addTransaction()" class = "btn green small"> Add </div>
+			</form>
+
+			<p> OR </p>
+
+			<%= form_tag('/upload', multipart:true, id: 'upload') do %>
+				<div id = "file_wrapper" class = "btn green med" >
+					Choose a File
+				</div>
+				<%= file_field_tag "file", accept: 'text/csv' %>
+			  and   
+			<a id = "upload_link" href = '#' ng-click="upload()">Upload</a>
+			<div style="margin-top:5px">
+					Statement Type:
+				<%= select_tag(:statement_type, options_for_select([["Vancity Visa", "vancity_visa"], ["PC Mastercard", "pc_mastercard"], ["Vancity Bank", "vancity_bank"]])) %>
+			</div>
+			<% end %>
+		    <div id = "progress" class = "hidden">
+		    	<%= image_tag 'spinner.gif', :id => 'progress_spinner'%>
+		    	<span id = "progress_text"> 100% </span>
+			</div>
+
+			<br/>
+
+			<div id = "file_name_container" class = "label-container hidden">
+				<label> Filename: </label>
+				<span id = "file_name"></span>
+			</div>
+
+		</div>
+
+	<% end %>
+
+</div>
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.js"></script>

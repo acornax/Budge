@@ -12,7 +12,7 @@ class UsersController < ApplicationController
 		@user = User.new(params[:user])
 		if @user.save
 		    cookies[:auth_token] = @user.auth_token
-			redirect_to enter_expenses_path
+			redirect_to enter_transactions_path
 		else
 			flash[:user_error] = "- Error. Please Try again."
 			redirect_to login_path

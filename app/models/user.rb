@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation
   has_one :budget
-  has_many :expenses
+  has_many :transactions
 
 
   validates_confirmation_of :password, :on => :create
