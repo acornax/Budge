@@ -104,8 +104,16 @@ def build_guest_transactions
 	@transactions = []
 	365.times do |n|
 		transaction = Transaction.new
-		transaction.transaction_date = Date.parse('01/01/2013') + rand(365)
+		transaction.transaction_date = Date.parse('01/01/2016') + rand(365)
 		transaction.amount = rand(30) + 1
+		transaction.info = "Example Transaction"
+		@transactions << transaction
+	end
+
+	100.times do |n|
+		transaction = Transaction.new
+		transaction.transaction_date = Date.parse('01/01/2016') + rand(365)
+		transaction.amount = (rand(30) + 1)*-1
 		transaction.info = "Example Transaction"
 		@transactions << transaction
 	end
