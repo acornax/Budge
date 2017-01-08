@@ -21,6 +21,7 @@
     var endDate = new Date(new Date().getFullYear(), 0, 365);
     $scope.endDate = endDate.getFullYear() + "-" + zeroPad(endDate.getMonth() + 1)+ "-" + zeroPad(endDate.getDate());
 
+    $scope.transactions = []
     queryTransactions($scope, Transactions);
 
     $scope.addTransaction = function() {
@@ -88,16 +89,27 @@
       var startTime = new Date($scope.startDate).getTime();
       var endTime = new Date($scope.endDate).getTime();
 
-      var filteredTransactions = [];
+      var newfilteredTransactions = [];
+
+      if ($scope.searchFilteredTransactions == undefined){
+        var searchFilteredTransactions = $scope.transactions;
+      } else {
+        var searchFilteredTransactions = $scope.searchFilteredTransactions.toArray();
+      }
 
       for (i = 0; i < $scope.transactions.length; i++){
         var transactionDate = new Date($scope.transactions[i].date);
 
-        if (transactionDate.getTime() > startTime && transactionDate.getTime() < endTime){
-          filteredTransactions.push($scope.transactions[i]);
+        // Filter includes 1. the date, and 2. the search filter
+        if (transactionDate.getTime() >= startTime && transactionDate.getTime() <= endTime && searchFilteredTransactions.indexOf($scope.transactions[i]) >= 0 ){
+          newfilteredTransactions.push($scope.transactions[i]);
         }
       }
-      $scope.filteredTransactions = filteredTransactions;
+
+      // Only trigger a scope update if the list of transactions to show has actually changed. 
+      if ($scope.filteredTransactions == undefined || _.isEqual($scope.filteredTransactions, newfilteredTransactions) == false ){
+        $scope.filteredTransactions = newfilteredTransactions;
+      }
     };
 
     $scope.getIncomeTotals = function () {
@@ -200,11 +212,16 @@ app.directive('transactionTable', function($timeout, $filter){
     scope.$watchCollection('filteredTransactions', function(newTransactions, oldTransactions){
       var searchVal = $("input[type='search'").val() || "";
       var order;
-      if (newTransactions && transactionsTable){
+
+      var transactionsHaveChanged = scope.searchFilteredTransactions != undefined 
+      && _.difference(newTransactions, scope.searchFilteredTransactions.toArray()) != []
+      && newTransactions.length != scope.searchFilteredTransactions.toArray().length
+
+      if (transactionsTable && transactionsHaveChanged){
         order = transactionsTable.order();
         transactionsTable.destroy();
       }
-      if (newTransactions){
+      if (newTransactions && oldTransactions == undefined || newTransactions && transactionsHaveChanged){
         transactionsTable = $('#transaction-table').DataTable({
           "search": {
             regex: true,
@@ -228,7 +245,8 @@ app.directive('transactionTable', function($timeout, $filter){
 
         transactionsTable.on('search.dt', function(){
           $timeout(function() {
-            scope.filteredTransactions = transactionsTable.rows( { search:'applied' } ).data();
+            scope.searchFilteredTransactions = transactionsTable.rows( { search:'applied' } ).data();
+            scope.filterTransactions();
           });
         });
         if (order){
