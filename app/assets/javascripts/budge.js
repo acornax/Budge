@@ -101,7 +101,7 @@
         var transactionDate = new Date($scope.transactions[i].date);
 
         // Filter includes 1. the date, and 2. the search filter
-        if (transactionDate.getTime() >= startTime && transactionDate.getTime() <= endTime && searchFilteredTransactions.indexOf($scope.transactions[i]) >= 0 ){
+        if (transactionDate.getTime() >= startTime && transactionDate.getTime() <= endTime && (searchFilteredTransactions.length == 0 || searchFilteredTransactions.indexOf($scope.transactions[i]) >= 0 )){
           newfilteredTransactions.push($scope.transactions[i]);
         }
       }
@@ -289,6 +289,6 @@ function loadTransactions($scope, transactions){
       transactions[i] = transactions[i].transaction;
       transactions[i].date = transactionDate;
     }
-    $scope.transactions = transactions;
+    $scope.transactions = _.union($scope.transactions, transactions);
     $scope.filterTransactions();
 }
