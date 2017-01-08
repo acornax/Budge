@@ -18,7 +18,7 @@
 
     var startDate = new Date(new Date().getFullYear(), 0, 1);
     $scope.startDate = startDate.getFullYear() + "-" + zeroPad(startDate.getMonth() + 1)+ "-" + zeroPad(startDate.getDate());
-    var endDate = new Date();
+    var endDate = new Date(new Date().getFullYear(), 0, 365);
     $scope.endDate = endDate.getFullYear() + "-" + zeroPad(endDate.getMonth() + 1)+ "-" + zeroPad(endDate.getDate());
 
     queryTransactions($scope, Transactions);
