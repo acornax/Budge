@@ -101,17 +101,16 @@
 	padding: 8px 16px 2px 10px ;
 }
 
+.ui-datepicker{
+	background-color:white;
+}
+
 .ui-datepicker-title{
 	text-align: center;
 	color: teal;
 	font-size: 20px;
 	padding-top:12px;
 
-}
-
-.hasDatepicker{
- 	position:relative;
- 	z-index:1000;
 }
 
 thead tr{
