@@ -5,8 +5,9 @@
 
   app.factory('Transactions', ['$resource', function($resource) {
      return $resource('/transactions/:id', {id: '@id'}, {
-      query: {method:'GET', isArray:true}
-     });
+      query: {method:'GET', isArray:true},
+      delete: {method:'DELETE'}
+      });
   }]);
 
 

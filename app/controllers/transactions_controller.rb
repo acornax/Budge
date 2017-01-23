@@ -1,6 +1,10 @@
+
 require 'csv'
 
 class TransactionsController < ApplicationController
+
+	skip_before_filter :login_required, only: [:index]
+
 
 	def index
 		if current_user
@@ -13,7 +17,7 @@ class TransactionsController < ApplicationController
 	end
 
 	def show
-		@transaction = Transaction.find(params(:id))
+		@transaction = Transaction.find(params[:id])
 		render 'show.json.rabl'
 	end
 
