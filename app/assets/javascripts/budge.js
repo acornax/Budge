@@ -24,6 +24,10 @@
     $scope.transactions = []
     queryTransactions($scope, Transactions);
 
+    $scope.$watchCollection("transactions", function(){
+      $scope.dateFilterTransactions();
+    });
+
     $scope.addTransaction = function() {
 
       $scope.newTransaction.transaction_date = $('#new-transaction-date-picker').val();
@@ -45,10 +49,6 @@
      var index  = $scope.transactions.indexOf(transaction);
      Transactions.delete({id: transaction.id});
      $scope.transactions.splice(index, 1);
-     var filterIndex  = $scope.filteredTransactions.indexOf(transaction);
-     $scope.filteredTransactions.splice(filterIndex, 1);
-     $scope.$apply();
-
     };
 
     $scope.upload = function(){
@@ -85,37 +85,31 @@
       $('#upload_link').addClass('hidden');
     };
 
-    $scope.filterTransactions = function () {
+    $scope.dateFilterTransactions = function () {
       var startTime = new Date($scope.startDate).getTime();
       var endTime = new Date($scope.endDate).getTime();
 
-      var newfilteredTransactions = [];
-
-      if ($scope.searchFilteredTransactions == undefined){
-        var searchFilteredTransactions = $scope.transactions;
-      } else {
-        var searchFilteredTransactions = $scope.searchFilteredTransactions.toArray();
-      }
+      var newDateFilteredTransactions = [];
 
       for (i = 0; i < $scope.transactions.length; i++){
         var transactionDate = new Date($scope.transactions[i].date);
 
         // Filter includes 1. the date, and 2. the search filter
-        if (transactionDate.getTime() >= startTime && transactionDate.getTime() <= endTime && (searchFilteredTransactions.length == 0 || searchFilteredTransactions.indexOf($scope.transactions[i]) >= 0 )){
-          newfilteredTransactions.push($scope.transactions[i]);
+        if (transactionDate.getTime() >= startTime && transactionDate.getTime() <= endTime){
+          newDateFilteredTransactions.push($scope.transactions[i]);
         }
       }
 
       // Only trigger a scope update if the list of transactions to show has actually changed. 
-      if ($scope.filteredTransactions == undefined || _.isEqual($scope.filteredTransactions, newfilteredTransactions) == false ){
-        $scope.filteredTransactions = newfilteredTransactions;
+      if ($scope.dateFilteredTransactions == undefined || _.isEqual($scope.dateFilteredTransactions, newDateFilteredTransactions) == false ){
+        $scope.dateFilteredTransactions = newDateFilteredTransactions;
       }
     };
 
     $scope.getIncomeTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
-     for (i = 0; i < $scope.filteredTransactions.length; i++){
-        var transaction = $scope.filteredTransactions[i];
+     for (i = 0; i < $scope.fullyFilteredTransactions.length; i++){
+        var transaction = $scope.fullyFilteredTransactions[i];
         month = transaction.date.getMonth();
         if (transaction.amount > 0){
           totals[month] += transaction.amount;
@@ -126,8 +120,8 @@
 
     $scope.getExpenseTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
-     for (i = 0; i < $scope.filteredTransactions.length; i++){
-        var transaction = $scope.filteredTransactions[i];
+     for (i = 0; i < $scope.fullyFilteredTransactions.length; i++){
+        var transaction = $scope.fullyFilteredTransactions[i];
         month = transaction.date.getMonth();
         if (transaction.amount < 0){
           totals[month] -= transaction.amount;
@@ -138,8 +132,8 @@
 
     $scope.getNetIncomeTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
-     for (i = 0; i < $scope.filteredTransactions.length; i++){
-        var transaction = $scope.filteredTransactions[i];
+     for (i = 0; i < $scope.fullyFilteredTransactions.length; i++){
+        var transaction = $scope.fullyFilteredTransactions[i];
         month = transaction.date.getMonth();
         totals[month] += transaction.amount;
      }
@@ -174,12 +168,11 @@
                                 tooltipAxes:'y'
                         },
                       };
-          scope.$watchCollection('filteredTransactions', function(newVal, oldVal){
+          scope.$watchCollection('fullyFilteredTransactions', function(newVal, oldVal){
             if (newVal && plot){
                plot.destroy();
             } 
             if (newVal){
-               scope.filterTransactions(); //FIXME, shouldn't need this.
                plot = $.jqplot($(element).attr("id"),  [scope.getIncomeTotals(), scope.getExpenseTotals(), scope.getNetIncomeTotals()], options);
             }
           });
@@ -196,7 +189,7 @@ app.directive('datepicker', function(){
         dateFormat: "yy-mm-dd", 
         onSelect: function(date){
           scope[attrs.ngModel] = date;
-          scope.filterTransactions();
+          scope.dateFilterTransactions();
           scope.$apply();
         }
       });
@@ -209,19 +202,15 @@ app.directive('datepicker', function(){
 var transactionsTable;
 app.directive('transactionTable', function($timeout, $filter){
   return function(scope, element, attrs){
-    scope.$watchCollection('filteredTransactions', function(newTransactions, oldTransactions){
+    scope.$watchCollection('dateFilteredTransactions', function(newTransactions, oldTransactions){
       var searchVal = $("input[type='search'").val() || "";
       var order;
 
-      var transactionsHaveChanged = scope.searchFilteredTransactions != undefined 
-      && _.difference(newTransactions, scope.searchFilteredTransactions.toArray()) != []
-      && newTransactions.length != scope.searchFilteredTransactions.toArray().length
-
-      if (transactionsTable && transactionsHaveChanged){
+      if (transactionsTable){
         order = transactionsTable.order();
         transactionsTable.destroy();
       }
-      if (newTransactions && oldTransactions == undefined || newTransactions && transactionsHaveChanged){
+      if (newTransactions && oldTransactions == undefined || newTransactions){
         transactionsTable = $('#transaction-table').DataTable({
           "search": {
             regex: true,
@@ -245,8 +234,8 @@ app.directive('transactionTable', function($timeout, $filter){
 
         transactionsTable.on('search.dt', function(){
           $timeout(function() {
-            scope.searchFilteredTransactions = transactionsTable.rows( { search:'applied' } ).data();
-            scope.filterTransactions();
+            scope.fullyFilteredTransactions = transactionsTable.rows( { search:'applied' } ).data();
+            scope.$apply();
           });
         });
         if (order){
@@ -290,5 +279,6 @@ function loadTransactions($scope, transactions){
       transactions[i].date = transactionDate;
     }
     $scope.transactions = _.union($scope.transactions, transactions);
-    $scope.filterTransactions();
+    $scope.dateFilterTransactions();
+    $scope.fullyFilteredTransactions = $scope.dateFilteredTransactions;
 }
