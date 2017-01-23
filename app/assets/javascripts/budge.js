@@ -108,35 +108,44 @@
 
     $scope.getIncomeTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
+     var total = 0;
      for (i = 0; i < $scope.fullyFilteredTransactions.length; i++){
         var transaction = $scope.fullyFilteredTransactions[i];
         month = transaction.date.getMonth();
         if (transaction.amount > 0){
           totals[month] += transaction.amount;
+          total += transaction.amount;
         }
      }
+     $scope.totalIncome = Math.ceil(total);
      return totals;
     };
 
     $scope.getExpenseTotals = function () {
-     var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
+     var totals = [0,0,0,0,0,0,0,0,0,0,0,]
+     var total = 0;
      for (i = 0; i < $scope.fullyFilteredTransactions.length; i++){
         var transaction = $scope.fullyFilteredTransactions[i];
         month = transaction.date.getMonth();
         if (transaction.amount < 0){
           totals[month] -= transaction.amount;
+          total -= transaction.amount;
         } 
      }
+     $scope.totalSpending = Math.ceil(total);
      return totals;
     };
 
     $scope.getNetIncomeTotals = function () {
      var totals = [0,0,0,0,0,0,0,0,0,0,0,0];
+     var total = 0;
      for (i = 0; i < $scope.fullyFilteredTransactions.length; i++){
         var transaction = $scope.fullyFilteredTransactions[i];
         month = transaction.date.getMonth();
         totals[month] += transaction.amount;
+        total += transaction.amount;
      }
+     $scope.totalNetIncome = Math.ceil(total);
      return totals;
     };
   });
@@ -166,7 +175,7 @@
                                 show: true,
                                 sizeAdjust: 7.5,
                                 tooltipAxes:'y'
-                        },
+                        }
                       };
           scope.$watchCollection('fullyFilteredTransactions', function(newVal, oldVal){
             if (newVal && plot){

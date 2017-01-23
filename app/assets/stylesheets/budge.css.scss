@@ -48,6 +48,11 @@
 	position:relative;
 }
 
+#date-selector-container{
+	display:inline-block;
+	margin-bottom:20px;
+}
+
 #action-container{
 	height:300px;
 }
@@ -77,6 +82,16 @@
 
 #summary_link_container{
 	position:absolute;
+}
+
+#total-container{
+	margin-left:2px;
+	margin-bottom:20px;
+	float:right;
+}
+
+.total-header {
+	padding:3px;
 }
 
 #ui-datepicker-div{
