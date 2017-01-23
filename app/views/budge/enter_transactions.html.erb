@@ -7,18 +7,28 @@
 
 		<p> Click <%= link_to "Here", login_path %> to create an account and upload your own data. </p>
 
-	<% end %>	
+	<% end %>
+
+	<div id="date-selector-container">
+		<h3>Select a Date Range</h3>
+		<p>
+			Start Date
+			<input id="start-time-date-picker" type="text" class = "date-picker" ng-model="startDate" datepicker>
+		</p>
+		<p> 
+			End Date
+			<input id="end-time-date-picker" type="text" class = "date-picker" ng-model="endDate" datepicker>
+		</p>
+	</div>
+
+	<div id="total-container">
+		<h3> Summary </h3>
+		<div id="total-income" class="total-header"><label>Total Income:</label> ${{totalIncome}}</label></div>
+		<div id="total-spending" class="total-header"><label>Total Spending:</label> ${{totalSpending}}</div>
+		<div id="total-net-income" class="total-header"><label>Total Net Income:</label> ${{totalNetIncome}}</div>
+	</div>
 
 	<div plot id="transaction_chart"></div>
-
-	<p> 
-		Start Date
-		<input id="start-time-date-picker" type="text" class = "date-picker" ng-model="startDate" datepicker>
-	</p>
-	<p> 
-		End Date
-		<input id="end-time-date-picker" type="text" class = "date-picker" ng-model="endDate" datepicker>
-	</p>
 
 	<div id = "transaction-container">
 	    <table id = "transaction-table" transaction-table>
