@@ -122,7 +122,7 @@
     };
 
     $scope.getExpenseTotals = function () {
-     var totals = [0,0,0,0,0,0,0,0,0,0,0,]
+     var totals = [0,0,0,0,0,0,0,0,0,0,0,0]
      var total = 0;
      for (i = 0; i < $scope.fullyFilteredTransactions.length; i++){
         var transaction = $scope.fullyFilteredTransactions[i];
